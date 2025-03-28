@@ -1,0 +1,6 @@
+# .gitignore
+venv/
+.env
+__pycache__/
+data/uploaded_docs/
+.streamlit/secrets.toml
