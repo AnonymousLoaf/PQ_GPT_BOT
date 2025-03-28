@@ -8,7 +8,26 @@ from utils.file_handler import extract_text
 from utils.embedder import chunk_text, embed_chunks
 from utils.vector_store import save_faiss_index, load_faiss_index, search_index
 
-# Load .env and OpenAI client
+# --- Basic Login ---
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+def login():
+    st.title("🔐 Login Required")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+    if st.button("Login"):
+        if username == st.secrets["auth"]["username"] and password == st.secrets["auth"]["password"]:
+            st.session_state.authenticated = True
+            st.experimental_rerun()
+        else:
+            st.error("Incorrect username or password")
+
+if not st.session_state.authenticated:
+    login()
+    st.stop()
+
+# Load OpenAI client
 api_key = st.secrets["OPENAI_API_KEY"]
 client = OpenAI(api_key=api_key)
 
@@ -37,8 +56,6 @@ if uploaded_file:
 
     # Extract text
     text = extract_text(uploaded_file, file_type)
-    # st.subheader("Extracted Text Preview")
-    # st.text_area("Document Content", value=text[:3000], height=300)
 
     # Embed if not already
     index_path = os.path.join(VECTOR_STORE, f"{uploaded_file.name}.index")
