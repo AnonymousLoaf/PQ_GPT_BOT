@@ -28,7 +28,7 @@ if not st.session_state.authenticated:
     st.stop()
 
 # Load OpenAI client
-api_key = st.secrets["OPENAI_API_KEY"]
+api_key = st.secrets["auth"]["OPENAI_API_KEY"]
 client = OpenAI(api_key=api_key)
 
 # Streamlit setup
